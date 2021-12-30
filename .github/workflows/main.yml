@@ -1,0 +1,37 @@
+name: X-Gorn/MangaLoader CI
+
+on:
+  workflow_dispatch:
+
+env:
+  PAT: ${{ secrets.GH_TOKEN }}
+  APP_ID: ${{ secrets.APP_ID }}
+  API_HASH: ${{ secrets.API_HASH }}
+  BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+  OWNER_ID: ${{ secrets.OWNER_ID }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: 'X-Gorn/MangaLoader'
+          path: 'app'
+
+      - name: Complete Script
+        timeout-minutes: 320
+        continue-on-error: true
+        run: |
+          sudo apt-fast update -qqy
+          sudo apt-fast install python3 python3-pip
+          cd $GITHUB_WORKSPACE/app
+          ls -lAog
+          python3 -m pip install -r requirments.txt
+          python3 bot.py
+
+      - name: Loop
+        continue-on-error: true
+        run: |
+          curl -X POST --header "Authorization: token ${PAT}" https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/main.yml/dispatches -d '{"ref":"main"}'
