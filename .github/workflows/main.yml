@@ -21,7 +21,7 @@ jobs:
           path: 'app'
 
       - name: Complete Script
-        timeout-minutes: 320
+        timeout-minutes: 350
         continue-on-error: true
         run: |
           cd $GITHUB_WORKSPACE/app
