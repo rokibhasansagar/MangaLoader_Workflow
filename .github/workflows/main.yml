@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
 
 env:
-  PAT: ${{ secrets.GH_TOKEN }}
   APP_ID: ${{ secrets.APP_ID }}
   API_HASH: ${{ secrets.API_HASH }}
   BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
@@ -27,8 +26,3 @@ jobs:
           cd $GITHUB_WORKSPACE/app
           python3 -m pip install -r requirements.txt
           python3 bot.py
-
-      - name: Loop
-        continue-on-error: true
-        run: |
-          curl -X POST --header "Authorization: token ${PAT}" https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/main.yml/dispatches -d '{"ref":"main"}'
